@@ -40,6 +40,14 @@ class Chromosome:
         ]
         self.fitness = self.calculate_fitness()
 
+    def decode(self) -> tuple[int, int, list[int]]:
+        total_weight = 0
+        for (_, weight), gene in zip(ITEMS, self.selected):
+            if gene:
+                total_weight += weight
+        selected_indices = [i for i, gene in enumerate(self.selected) if gene]
+        return self.fitness, total_weight, selected_indices
+
 
 def create_population(pop_size: int) -> list[Chromosome]:
     return [Chromosome() for _ in range(pop_size)]
@@ -98,5 +106,5 @@ if __name__ == '__main__':
     random.seed(42)
 
     best_solution = genetic_algorithm(200, 2000)
-
-    print(f"\nBest solution: {best_solution.fitness}")
+    value, weight, indices = best_solution.decode()
+    print(f"\nBest solution: value={value} weight={weight}/{CAPACITY} items={indices}")
