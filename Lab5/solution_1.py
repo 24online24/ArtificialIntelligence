@@ -10,7 +10,7 @@ item_data: list[dict] = problem_1_data['objects']
 
 ITEMS: list[tuple[int, int]] = [(item['value'], item['weight']) for item in item_data]
 
-MUTATION_RATE: float = 0.05
+MUTATION_RATE: float = 1 / len(ITEMS)
 CROSSOVER_RATE: float = 0.8
 
 

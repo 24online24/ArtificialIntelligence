@@ -11,7 +11,7 @@ project_data: list[dict] = problem_2_data['projects']
 
 PROJECTS: list[tuple[int, int, int]] = [(project['value'], project['cost'], project['time']) for project in project_data]
 
-MUTATION_RATE: float = 0.05
+MUTATION_RATE: float = 1 / len(PROJECTS)
 CROSSOVER_RATE: float = 0.8
 
 
