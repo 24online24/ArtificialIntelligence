@@ -1,6 +1,6 @@
-import random
-import json
 import copy
+import json
+import random
 
 with open('problem_1.json') as f:
     problem_1_data = json.load(f)
