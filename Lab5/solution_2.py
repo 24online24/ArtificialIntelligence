@@ -189,6 +189,6 @@ if __name__ == '__main__':
     best_solution = genetic_algorithm(200, 2000)
     value, cost, time, indices = best_solution.decode()
     print(
-        f"\nBest solution: value={value} cost={cost}/{TOTAL_BUDGET} time={time}/{TOTAL_TIME}"
+        f"\nBest solution: value={value} cost={cost}/{TOTAL_BUDGET} time={time}/{TOTAL_TIME} "
         f"projects={indices}"
     )
