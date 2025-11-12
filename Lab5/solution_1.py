@@ -29,7 +29,9 @@ class Chromosome:
             if gene:
                 total_value += value
                 total_weight += weight
-        return total_value if total_weight <= CAPACITY else 0
+                if total_weight > CAPACITY:
+                    return 0
+        return total_value
 
     def mutate(self):
         self.selected = [not gene if random.random() < MUTATION_RATE else gene for gene in self.selected]
