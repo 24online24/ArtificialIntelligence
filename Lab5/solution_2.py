@@ -9,10 +9,7 @@ TOTAL_BUDGET = problem_2_data['budget_total']
 TOTAL_TIME = problem_2_data['time_total']
 project_data: list[dict] = problem_2_data['projects']
 
-print(TOTAL_BUDGET, TOTAL_TIME)
-
 PROJECTS: list[tuple[int, int, int]] = [(project['value'], project['cost'], project['time']) for project in project_data]
-
 
 MUTATION_RATE: float = 0.05
 CROSSOVER_RATE: float = 0.8
@@ -44,7 +41,7 @@ class Chromosome:
 
         Returns:
             Total value of selected projects if the combined cost and time does not
-            exceed limits; otherwise ``0``.
+            exceed the limits; otherwise ``0``.
         """
         total_value = 0
         total_cost = 0
