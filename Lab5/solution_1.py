@@ -15,8 +15,8 @@ CROSSOVER_RATE: float = 0.8
 
 
 class Chromosome:
-    def __init__(self, selected: list[bool] = []):
-        if selected:
+    def __init__(self, selected: list[bool] | None = None):
+        if selected is not None:
             self.selected = selected.copy()
         else:
             self.selected = [random.random() < 0.5 for _ in range(len(ITEMS))]
