@@ -34,7 +34,10 @@ class Chromosome:
         return total_value
 
     def mutate(self):
-        self.selected = [not gene if random.random() < MUTATION_RATE else gene for gene in self.selected]
+        self.selected = [
+            not gene if random.random() < MUTATION_RATE else gene
+            for gene in self.selected
+        ]
         self.fitness = self.calculate_fitness()
 
 
