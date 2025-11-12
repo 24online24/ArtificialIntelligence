@@ -17,7 +17,7 @@ CROSSOVER_RATE: float = 0.8
 class Chromosome:
     def __init__(self, selected: list[bool] = []):
         if selected:
-            self.selected = selected
+            self.selected = selected.copy()
         else:
             self.selected = [random.random() < 0.5 for _ in range(len(ITEMS))]
         self.fitness = self.calculate_fitness()
@@ -68,7 +68,7 @@ def genetic_algorithm(population_size: int, generations: int) -> Chromosome:
             best_chromosome = copy.deepcopy(best_in_generation)
         if generation % 100 == 0:
             print(f"Generation: {generation} | Best current: {best_in_generation.fitness} | Best ever: {best_chromosome.fitness}")
-        next_population = []
+        next_population = [copy.deepcopy(best_chromosome)]
 
         while len(next_population) < population_size:
             parent1 = tournament_selection(population, 5)
@@ -77,7 +77,7 @@ def genetic_algorithm(population_size: int, generations: int) -> Chromosome:
             if random.random() < CROSSOVER_RATE:
                 child1, child2 = uniform_crossover(parent1, parent2)
             else:
-                child1, child2 = copy.deepcopy(parent1), copy.deepcopy(parent2)
+                child1, child2 = Chromosome(parent1.selected.copy()), Chromosome(parent2.selected.copy())
 
             child1.mutate()
             child2.mutate()
