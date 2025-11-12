@@ -12,6 +12,7 @@ ITEMS: list[tuple[int, int]] = [(item['value'], item['weight']) for item in item
 
 MUTATION_RATE: float = 1 / len(ITEMS)
 CROSSOVER_RATE: float = 0.8
+TOURNAMENT_SIZE: int = 5
 
 
 class Chromosome:
@@ -87,10 +88,7 @@ def create_population(pop_size: int) -> list[Chromosome]:
     return [Chromosome() for _ in range(pop_size)]
 
 
-def tournament_selection(
-    population: list[Chromosome],
-    tournament_size: int,
-) -> Chromosome:
+def tournament_selection(population: list[Chromosome]) -> Chromosome:
     """Select a parent using tournament selection.
 
     Args:
@@ -100,7 +98,7 @@ def tournament_selection(
     Returns:
         The chromosome with the highest fitness among the sampled participants.
     """
-    participants = random.sample(population, tournament_size)
+    participants = random.sample(population, TOURNAMENT_SIZE)
     return max(participants, key=lambda chromosome: chromosome.fitness)
 
 
@@ -159,8 +157,8 @@ def genetic_algorithm(population_size: int, generations: int) -> Chromosome:
         next_population = [copy.deepcopy(best_chromosome)]
 
         while len(next_population) < population_size:
-            parent1 = tournament_selection(population, 5)
-            parent2 = tournament_selection(population, 5)
+            parent1 = tournament_selection(population)
+            parent2 = tournament_selection(population)
 
             if random.random() < CROSSOVER_RATE:
                 child1, child2 = uniform_crossover(parent1, parent2)
