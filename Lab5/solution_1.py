@@ -97,7 +97,7 @@ def genetic_algorithm(population_size: int, generations: int) -> Chromosome:
 
             next_population.extend([child1, child2])
 
-        population = next_population
+        population = next_population[:population_size]
 
     return best_chromosome
 
