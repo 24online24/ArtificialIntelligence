@@ -50,9 +50,9 @@ def uniform_crossover(parent1: Chromosome, parent2: Chromosome) -> tuple[Chromos
     for gene_parent_1, gene_parent_2 in zip(parent1.selected, parent2.selected):
         if random.random() < 0.5:
             child_1_genes.append(gene_parent_1)
-            child_2_genes.append(child_2_genes)
+            child_2_genes.append(gene_parent_2)
         else:
-            child_1_genes.append(child_2_genes)
+            child_1_genes.append(gene_parent_2)
             child_2_genes.append(gene_parent_1)
     return Chromosome(child_1_genes), Chromosome(child_2_genes)
 
