@@ -1,10 +1,14 @@
+"""Permutation crossovers and parent selection for minimization (fitness is cost)."""
+
 import random
 import numpy as np
 
 
 def one_point_crossover(p1, p2):
     length = len(p1)
-    crossover_point = random.randint(2, length - 1)
+    if length < 2:
+        return p1.copy()
+    crossover_point = random.randint(1, length - 1)
     child = p1[:crossover_point]
 
     for city in p2:
@@ -16,7 +20,9 @@ def one_point_crossover(p1, p2):
 
 def two_point_crossover(p1, p2):
     length = len(p1)
-    left, right = sorted(random.sample(range(length), 2))
+    if length < 2:
+        return p1.copy()
+    left, right = sorted(random.sample(range(length + 1), 2))
     child = [-1] * length
     child[left:right] = p1[left:right]
     used = set(p1[left:right])
@@ -86,6 +92,11 @@ def random_selection(population):
 
 
 def roulette_wheel_selection(population):
+    if any(not np.isfinite(c.fitness) or c.fitness < 0 for c in population):
+        raise ValueError("Roulette selection requires finite, nonnegative costs.")
+    zero_cost = [c for c in population if c.fitness == 0]
+    if zero_cost:
+        return random.choice(zero_cost)
     total_fitness = sum(1.0 / chromosome.fitness for chromosome in population)
     selection_point = random.uniform(0, total_fitness)
     accumulated_fitness = 0.0
@@ -93,10 +104,11 @@ def roulette_wheel_selection(population):
         accumulated_fitness += 1.0 / chromosome.fitness
         if accumulated_fitness >= selection_point:
             return chromosome
+    return population[-1]
 
 
 def tournament_selection(population, tournament_size=30):
-    tournament = random.sample(population, tournament_size)
+    tournament = random.sample(population, min(tournament_size, len(population)))
     return min(tournament, key=lambda chromosome: chromosome.fitness)
 
 
@@ -111,6 +123,7 @@ def rank_selection(population):
         accumulated_probability += probability
         if accumulated_probability >= selection_point:
             return chromosome
+    return sorted_population[-1]
 
 
 def elite_selection(population, elite_size=5):
@@ -128,6 +141,8 @@ def boltzmann_selection(population, generation):
     def _normalize_fitness(fitness_values):
         min_fitness = min(fitness_values)
         max_fitness = max(fitness_values)
+        if min_fitness == max_fitness:
+            return [0.0] * len(fitness_values)
         return [1 - ((f - min_fitness) / (max_fitness - min_fitness)) for f in fitness_values]
 
     temperature = max(FINAL_TEMPERATURE, INITIAL_TEMPERATURE - generation * DELTA)
@@ -142,3 +157,4 @@ def boltzmann_selection(population, generation):
         accumulated_probability += probability
         if accumulated_probability >= selection_point:
             return chromosome
+    return population[-1]

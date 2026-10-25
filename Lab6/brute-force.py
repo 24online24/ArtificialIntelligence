@@ -1,7 +1,7 @@
 from itertools import product
 
 def find_partition(numbers: list[int]):
-    lowest_difference = 1e9
+    lowest_difference = float("inf")
     best_mask = []
     for mask in product([0, 1], repeat=len(numbers)):
         s1 = 0
@@ -26,12 +26,13 @@ def find_partition(numbers: list[int]):
             else:
                 partition_2.append(number)
 
-    return partition_1, partition_2, sum(partition_2) - sum(partition_1)
+    return partition_1, partition_2, abs(sum(partition_2) - sum(partition_1))
 
 problem_1_1_data = [3, 5, 6, 7, 9, 11, 12, 13]
 problem_1_2_data = [4, 7, 10, 11, 12, 14, 15, 18]
 problem_2_data = [82, 75, 91, 68, 79, 95, 88, 73, 84, 77, 92, 69, 81, 87, 90, 76, 83, 71, 85, 80]
 
-print(find_partition(problem_1_1_data))
-print(find_partition(problem_1_2_data))
-print(find_partition(problem_2_data))
+if __name__ == "__main__":
+    print(find_partition(problem_1_1_data))
+    print(find_partition(problem_1_2_data))
+    print(find_partition(problem_2_data))

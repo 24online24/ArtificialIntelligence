@@ -1,8 +1,9 @@
 import copy
 import json
 import random
+from pathlib import Path
 
-with open('problem_1.json') as f:
+with Path(__file__).with_name('problem_1.json').open(encoding='utf-8') as f:
     problem_1_data = json.load(f)
 
 CAPACITY = problem_1_data['capacity']
@@ -93,12 +94,11 @@ def tournament_selection(population: list[Chromosome]) -> Chromosome:
 
     Args:
         population: Current population of chromosomes.
-        tournament_size: Number of individuals competing in each tournament.
 
     Returns:
         The chromosome with the highest fitness among the sampled participants.
     """
-    participants = random.sample(population, TOURNAMENT_SIZE)
+    participants = random.sample(population, min(TOURNAMENT_SIZE, len(population)))
     return max(participants, key=lambda chromosome: chromosome.fitness)
 
 
@@ -139,13 +139,17 @@ def genetic_algorithm(population_size: int, generations: int) -> Chromosome:
         The best chromosome discovered during the run.
     """
     population = create_population(population_size)
-    best_chromosome = copy.deepcopy(population[0])
+    # The empty selection is feasible even if every random chromosome is not.
+    best_chromosome = Chromosome([False] * len(ITEMS))
 
-    for generation in range(generations):
+    for generation in range(generations + 1):
         best_in_generation = max(population, key=lambda c: c.fitness)
 
         if best_in_generation.fitness > best_chromosome.fitness:
             best_chromosome = copy.deepcopy(best_in_generation)
+
+        if generation == generations:
+            break
 
         if generation % 100 == 0:
             print(

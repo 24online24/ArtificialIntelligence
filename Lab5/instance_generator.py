@@ -1,5 +1,6 @@
 import json
 import random
+from pathlib import Path
 
 
 def generate_knapsack_instance_problem_1(num_objects=100, min_weight=5, max_weight=100):
@@ -54,10 +55,13 @@ def generate_knapsack_instance_problem_2(
     }
 
 
-problem_1 = generate_knapsack_instance_problem_1()
-with open("problem_1.json", "w") as f:
-    json.dump(problem_1, f, indent=4)
+if __name__ == "__main__":
+    if Path("problem_1.json").exists() or Path("problem_2.json").exists():
+        raise FileExistsError("An instance already exists; run in a new directory.")
+    problem_1 = generate_knapsack_instance_problem_1()
+    with open("problem_1.json", "x") as f:
+        json.dump(problem_1, f, indent=4)
 
-problem_2 = generate_knapsack_instance_problem_2()
-with open("problem_2.json", "w") as f:
-    json.dump(problem_2, f, indent=4)
+    problem_2 = generate_knapsack_instance_problem_2()
+    with open("problem_2.json", "x") as f:
+        json.dump(problem_2, f, indent=4)
