@@ -140,6 +140,32 @@ class KnapsackTests(unittest.TestCase):
 
 
 class PartitionTests(unittest.TestCase):
+    def test_group_size_changes_the_feasible_optimum(self):
+        numbers = [1, 1, 1, 3]
+        self.assertEqual(partition.find_partition(numbers)[2], 0)
+        a, b, difference = partition.find_partition(numbers, group_size=2)
+        self.assertEqual((len(a), len(b), difference), (2, 2, 2))
+        self.assertEqual(sorted(a + b), sorted(numbers))
+
+    def test_fixed_size_partition_matches_exhaustive_optimum(self):
+        for numbers in [[], [7], [1, 1, 1, 3], [-4, 1, 7], partition.problem_2_data]:
+            sizes = [10] if len(numbers) == 20 else range(len(numbers) + 1)
+            for size in sizes:
+                with self.subTest(numbers=numbers, size=size):
+                    a, b, difference = partition.find_partition(numbers, group_size=size)
+                    optimum = min(abs(2 * sum(numbers[i] for i in indices) - sum(numbers))
+                                  for indices in itertools.combinations(range(len(numbers)), size))
+                    self.assertEqual(len(a), size)
+                    self.assertEqual(len(b), len(numbers) - size)
+                    self.assertEqual(sorted(a + b), sorted(numbers))
+                    self.assertEqual(difference, abs(sum(a) - sum(b)))
+                    self.assertEqual(difference, optimum)
+
+    def test_impossible_group_size_is_rejected(self):
+        for size in [-1, 4]:
+            with self.assertRaises(ValueError):
+                partition.find_partition([1, 2, 3], group_size=size)
+
     def test_partition_matches_exhaustive_optimum(self):
         for numbers in [[], [10**12], [1, 2, 4], [4, 5, 8, 9], [-4, 1, 7]]:
             a, b, difference = partition.find_partition(numbers)

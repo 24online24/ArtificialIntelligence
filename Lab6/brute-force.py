@@ -1,9 +1,14 @@
 from itertools import product
 
-def find_partition(numbers: list[int]):
+def find_partition(numbers: list[int], group_size: int | None = None):
+    """Minimize the sum difference, optionally fixing the group size."""
+    if group_size is not None and not 0 <= group_size <= len(numbers):
+        raise ValueError("group_size must be between 0 and the number of elements")
     lowest_difference = float("inf")
     best_mask = []
     for mask in product([0, 1], repeat=len(numbers)):
+        if group_size is not None and sum(mask) != group_size:
+            continue
         s1 = 0
         s2 = 0
         for number, bit in zip(numbers, mask):
@@ -35,4 +40,4 @@ problem_2_data = [82, 75, 91, 68, 79, 95, 88, 73, 84, 77, 92, 69, 81, 87, 90, 76
 if __name__ == "__main__":
     print(find_partition(problem_1_1_data))
     print(find_partition(problem_1_2_data))
-    print(find_partition(problem_2_data))
+    print(find_partition(problem_2_data, group_size=len(problem_2_data) // 2))
